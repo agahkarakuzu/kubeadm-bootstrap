@@ -10,6 +10,8 @@ kubeadm init --pod-network-cidr=10.244.0.0/16
 mkdir -p $HOME/.kube
 cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
 chown ${SUDO_UID} $HOME/.kube/config
+export KUBECONFIG=~/.kube/config
+echo 'export KUBECONFIG=~/.kube/config' >> ~/.bashrc
 
 # Install flannel
 #kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
