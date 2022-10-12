@@ -20,7 +20,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.13.0/Docume
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # Install and initialize helm
-curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 # Tiller is removed with helm3
 #kubectl --namespace kube-system create serviceaccount tiller
 #kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
