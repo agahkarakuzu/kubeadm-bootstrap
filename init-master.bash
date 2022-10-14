@@ -4,7 +4,8 @@ set -e
 # By now the master node should be ready!
 # Initialize kubeadm
 sysctl net.bridge.bridge-nf-call-iptables=1
-kubeadm init --pod-network-cidr=10.244.0.0/16
+#kubeadm init --pod-network-cidr=10.244.0.0/16
+kubeadm init --config kube-config.yaml
 
 # To use the cluster
 mkdir -p $HOME/.kube
