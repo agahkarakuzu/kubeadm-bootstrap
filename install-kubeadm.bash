@@ -8,8 +8,10 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
 EOF
 
+apt-get update
+
 # Install Docker CE
-sudo apt-get update && sudo apt-get install -y \
+apt-get install -y \
   containerd.io=1.2.13-2 \
   docker-ce=5:19.03.11~3-0~ubuntu-xenial \
   docker-ce-cli=5:19.03.11~3-0~ubuntu-xenial
