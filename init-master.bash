@@ -5,20 +5,23 @@ set -e
 
 # Use config file to initialize ctl plane
 kubeadm init --config kube-config.yaml
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> .bashrc && source .bashrc
 
 # To use the cluster
 # mkdir -p $HOME/.kube
 # cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
 # chown ${SUDO_UID} $HOME/.kube/config
 
-mkdir -p $HOME/.kube
-cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-chown $(id -u):$(id -g) $HOME/.kube/config
+# mkdir -p $HOME/.kube
+# cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+# chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Deploying Flannel (a pod network) with kubectl
 # VERSION 0.25.0
 # Read more https://github.com/flannel-io/flannel
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/canal.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/master/manifests/calico-vxlan.yaml
+#kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/canal.yaml
 #kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0/kube-flannel.yml
 
 
