@@ -49,7 +49,8 @@ apt install -y \
   gnupg2 \
   software-properties-common \
   apt-transport-https \
-  ca-certificates
+  ca-certificates \
+  gpg
 
 # ============================================= Containerd
 # Install
@@ -62,12 +63,11 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmour -o /etc
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 apt update
-apt install -y \
-  containerd.io \
-  docker.io
+apt install -y docker.io
 
 # Change the SystemdCgroup setting from false to true
 # kube-config.yaml MUST set cgroupDriver to systemd for this.
+mkdir -p /etc/containerd
 containerd config default | tee /etc/containerd/config.toml >/dev/null 2>&1
 sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 
@@ -80,21 +80,19 @@ systemctl enable containerd
 # https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction
 
 # Add the Kubernetes signing key and repository.
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-# Overwrite k8s config.
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+#curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+#echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
 
 apt-get update
 
-# Install
-apt-get install -y \
-  kubelet=1.29.0 \
-  kubeadm=1.29.0 \
-  kubectl=1.29.0
-
-# Freeze 
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
+systemctl enable --now kubelet
 # ============================================= DONE
 # Terraform will be used to initialize 
 # On master node: init-master
