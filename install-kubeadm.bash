@@ -58,7 +58,7 @@ apt install -y \
 
 # Install containerd runtime
 # Kubernetes has deprecated Docker as a container runtime in favor of containerd (2020).
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 apt update
@@ -77,6 +77,7 @@ systemctl enable containerd
 
 # ============================================= K8S
 # Install 1.29
+# https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction
 
 # Add the Kubernetes signing key and repository.
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg

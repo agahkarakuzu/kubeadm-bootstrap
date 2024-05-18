@@ -12,8 +12,8 @@ kubeadm init --config kube-config.yaml
 # chown ${SUDO_UID} $HOME/.kube/config
 
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Deploying Flannel (a pod network) with kubectl
 # VERSION 0.25.0
