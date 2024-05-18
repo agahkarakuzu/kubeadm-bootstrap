@@ -8,13 +8,9 @@ kubeadm init --config kube-config.yaml
 
 
 # To use the cluster
-# mkdir -p $HOME/.kube
-# cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
-# chown ${SUDO_UID} $HOME/.kube/config
-
 mkdir -p $HOME/.kube
-cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-chown $(id -u):$(id -g) $HOME/.kube/config
+cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
+chown ${SUDO_UID} $HOME/.kube/config
 
 # Deploying Flannel (a pod network) with kubectl
 # VERSION 0.25.0
