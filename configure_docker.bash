@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This is sub-optimal, manually attempts to have all the nodes
+# login to provate registry.
+
+# Ideally, this should have been dealt with @k8s level.
 sudo docker login $1 --username $2 --password $3
 sudo chown -R ubuntu /home/ubuntu/.docker
 sudo chgrp -R ubuntu /home/ubuntu/.docker

@@ -1,33 +1,41 @@
 #!/bin/bash
+# immediately exit if any command within the script returns a non-zero exit 
+# status (indicating an error)
 set -e
 
-# By now the master node should be ready!
-# Initialize kubeadm
-sysctl net.bridge.bridge-nf-call-iptables=1
-#kubeadm init --pod-network-cidr=10.244.0.0/16
+# Use config file to initialize ctl plane
 kubeadm init --config kube-config.yaml
 
 # To use the cluster
+# mkdir -p $HOME/.kube
+# cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
+# chown ${SUDO_UID} $HOME/.kube/config
+
 mkdir -p $HOME/.kube
-cp --remove-destination /etc/kubernetes/admin.conf $HOME/.kube/config
-chown ${SUDO_UID} $HOME/.kube/config
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# Install flannel
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.13.0/Documentation/kube-flannel.yml
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.20.0/Documentation/kube-flannel.yml
+# Deploying Flannel (a pod network) with kubectl
+# VERSION 0.25.0
+# Read more https://github.com/flannel-io/flannel
+kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0/kube-flannel.yml
 
-# Make master node a running worker node too!
-# FIXME: Use taint tolerations instead in the future
+
+# ===========
+# In Kubernetes, "taints" and "tolerations" are mechanisms used to control which nodes can accept which pods.
+# By default, the master nodes HAVE a taint that prevents regular pods from being scheduled on them. This is to 
+# ensure that the control plane has enough resources to manage the cluster effectively.
+# E.g., in BinderHub, this means a user can be assigned to the master node for 
+# a session. 
+# ============
+
+# Removing the taints on the control plane so that we can schedule pods on it.
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
-# Install and initialize helm
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-# Tiller is removed with helm3
-#kubectl --namespace kube-system create serviceaccount tiller
-#kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-#helm init --service-account tiller --wait
-#kubectl patch deployment tiller-deploy --namespace=kube-system --type=json --patch='[{"op": "add", "path": "/spec/template/spec/containers/0/command", "value": ["/tiller", "--listen=localhost:44134"]}]'
+# ================ INSTALL HELM
+# Official source: https://helm.sh/docs/intro/install/#from-script
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 
-# Wait for tiller to be ready!
-#kubectl rollout status --namespace=kube-system deployment/tiller-deploy --watch
+# curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
