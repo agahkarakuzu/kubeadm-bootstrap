@@ -18,7 +18,8 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 # Deploying Flannel (a pod network) with kubectl
 # VERSION 0.25.0
 # Read more https://github.com/flannel-io/flannel
-kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/canal.yaml
+#kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0/kube-flannel.yml
 
 
 # ===========
