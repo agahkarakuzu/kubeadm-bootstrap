@@ -7,7 +7,7 @@
 sudo docker login $1 --username $2 --password $3
 sudo chown -R ubuntu /home/ubuntu/.docker
 sudo chgrp -R ubuntu /home/ubuntu/.docker
-nodes=$(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o jsonpath='{range .items[*].status.addresses[?(@.type=="InternalIP")]}{.address} {end}')
+nodes=$(kubectl get nodes --selector='!node-role.kubernetes.io/control-plane' -o jsonpath='{range .items[*].status.addresses[?(@.type=="InternalIP")]}{.address} {end}')
 echo $nodes
 for n in $nodes;
 do

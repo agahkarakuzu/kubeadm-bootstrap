@@ -6,7 +6,7 @@ nb_nodes=$1
 while [ $(echo $nodes | wc -w) -ne $nb_nodes ];
 do
 	sleep 2
-	nodes=$(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o jsonpath='{range .items[*].status.addresses[?(@.type=="InternalIP")]}{.address} {end}')
+	nodes=$(kubectl get nodes --selector='!node-role.kubernetes.io/control-plane' -o jsonpath='{range .items[*].status.addresses[?(@.type=="InternalIP")]}{.address} {end}')
 	echo $nodes
 done
 
