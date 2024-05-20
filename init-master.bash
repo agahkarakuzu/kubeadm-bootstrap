@@ -3,6 +3,7 @@
 # status (indicating an error)
 set -e
 
+echo "Initializing kubeadm"
 # Use config file to initialize ctl plane
 kubeadm init --config kube-config.yaml
 
@@ -29,8 +30,11 @@ kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/master/m
 # a session. 
 # ============
 
+echo "Removing master taint"
 # Removing the taints on the control plane so that we can schedule pods on it.
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
+touch kubeadm-init-success
 
 # ================ INSTALL HELM
 # Official source: https://helm.sh/docs/intro/install/#from-script
@@ -38,4 +42,4 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-# curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+touch helm-install-success
