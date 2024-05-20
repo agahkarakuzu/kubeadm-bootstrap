@@ -4,7 +4,7 @@ set -e
 # Use the latest versions of the 
 # existing packages.
 apt-get update
-
+apt-get upgrade -y
 # ============================================= Pre-install sys configs
 # Disable swap
 # Enable overlay file system 
