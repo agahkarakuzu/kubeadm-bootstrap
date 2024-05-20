@@ -63,7 +63,10 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmour -o /etc
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 apt update
-apt install -y docker.io
+apt install -y \
+  docker.io \
+  docker-ce \
+  docker-ce-cli
 
 # Change the SystemdCgroup setting from false to true
 # kube-config.yaml MUST set cgroupDriver to systemd for this.
