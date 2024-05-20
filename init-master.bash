@@ -19,8 +19,8 @@ chown ${SUDO_UID} $HOME/.kube/config
 
 #kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/master/manifests/calico-vxlan.yaml
 #kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/canal.yaml
-kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0/kube-flannel.yml
-
+#kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.20.0/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.20.0/Documentation/kube-flannel.yml
 
 # ===========
 # In Kubernetes, "taints" and "tolerations" are mechanisms used to control which nodes can accept which pods.
@@ -32,8 +32,8 @@ kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.25.0
 
 echo "Removing master taint"
 # Removing the taints on the control plane so that we can schedule pods on it.
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-
+# kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+kubectl taint nodes --all node-role.kubernetes.io/master-
 touch kubeadm-init-success
 
 # ================ INSTALL HELM
