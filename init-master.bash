@@ -32,8 +32,8 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.20.0/Docume
 
 echo "Removing master taint"
 # Removing the taints on the control plane so that we can schedule pods on it.
-# kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-kubectl taint nodes --all node-role.kubernetes.io/master-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+#kubectl taint nodes --all node-role.kubernetes.io/master-
 touch kubeadm-init-success
 
 # ================ INSTALL HELM
